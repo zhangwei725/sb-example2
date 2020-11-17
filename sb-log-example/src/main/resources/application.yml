@@ -1,0 +1,13 @@
+server:
+  port: 8000
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    com.smart.service: debug
+
+
+
+
+
+

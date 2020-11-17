@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <!--    30w  1000人  -->
+    <!--
+    错误日志   error log-error.yyyy-MM-dd.log
+    业务日志  info   log-info.yyyy-MM-dd.log
+    -->
+    <!--    -->
+    <!--    日志格式-->
+    <!--    定义变量  ${变量 }-->
+    <property name="LOG_PATH" value="D:\\work\\IdeaProjects\\sb\\sb-example2\\sb-log-example\\logs"/>
+    <!-- 日志输出格式：%d表示日期时间，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %logger{50} 表示logger名字最长50个字符，否则按照句点分割。
+     %msg：日志消息，%n是换行符 -->
+    <property name="LOG_PATTEN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
+
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+        <encoder>
+            <pattern>
+                ${LOG_PATTEN}
+            </pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+    </appender>
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="INFO">
+        <file>${LOG_PATH}\info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--            指定程序中info基本的日志信息的文件-->
+            <fileNamePattern>${LOG_PATH}\business\log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--            限制文件的大小-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTEN}</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+        </filter>
+    </appender>
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="ERROR">
+        <file>${LOG_PATH}\error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--            指定程序中info基本的日志信息的文件-->
+            <fileNamePattern>${LOG_PATH}\business\log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--            限制文件的大小-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTEN}</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+        </filter>
+    </appender>
+    <appender name="ASYNC-INFO" class="ch.qos.logback.classic.AsyncAppender">
+        <!--      配置异步日志的队列大小-->
+        <queueSize>256</queueSize>
+        <appender-ref ref="INFO"/>
+    </appender>
+    <appender name="ASYNC-ERROR" class="ch.qos.logback.classic.AsyncAppender">
+        <!--        丢失日志策略-->
+        <!--      配置异步日志的队列大小-->
+        <queueSize>256</queueSize>
+        <appender-ref ref="ERROR"/>
+    </appender>
+    <!--    生产环境设置成  info-->
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="INFO"/>
+    </root>
+</configuration>

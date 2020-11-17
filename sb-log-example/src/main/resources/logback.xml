@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true">
+    <!--
+    ⽇志类型:
+     1、正常业务⽇志:⽇志⽂件为log-info.yyyy-MM-dd.log
+     2、错误⽇志:log-err.yyyy-MM.log
+     3、警告⽇志:log-warn.yyyy-MM.log
+     4、请求⽇志⽂件:http-log.yyyy-MM-dd.log
+     ⽇志⽂件说明：⽇志⽂件以天为单位记录,单个⼤⼩为30M,⼀天超过30M的⽂件以索引0.1.2..标志，
+    ⽐如
+     log-info.yyyy-MM-dd.0.log,log-info.yyyy-MM-dd.1.log等等
+    追加器：
+     FILE-INFO:对应info以后的所有级别,包含业务、警告、错误信息
+     FILE-WARN:对应warn级别,包含警告信息
+     FILE-ERROR:对应error级别,包含错误信息
+    -->
+    <!-- ⼆、⼦节点<contextName>：⽤来设置上下⽂名称，每个logger都关联到logger上下⽂，默认上
+   下⽂名称为default。但可以使⽤<contextName>设置成其他名字，⽤于区分不同应⽤程序的记录。⼀旦
+   设置，不能修改。-->
+    <contextName>product</contextName>
+    <!-- 定义⽇志的根路径 可以使“${}”来使⽤变量-->
+    <property name="LOG_PATH" value="D:\\work\\IdeaProjects\\sb\\sb-example2\\sb-log-example\\logs"/>
+    <!--注册转换器，颜⾊转化器-->
+    <conversionRule conversionWord="clr"
+                    converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <!-- %d{HH:mm:ss.SSS}——⽇志输出时间-->
+    <!-- %thread——输出⽇志的进程名字，这在Web应⽤以及异步任务处理中很有⽤-->
+    <!-- %-5level——⽇志级别，并且使⽤5个字符靠左对⻬-->
+    <!-- %logger- ——⽇志输出者的名字-->
+    <!-- %msg——⽇志消息-->
+    <!-- %n——换⾏符-->
+    <!-- 彩⾊⽇志格式 -->
+    <property name="STDOUT_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr($
+{LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint}
+%clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n
+ ${LOG_EXCEPTION_CONVERSION_WORD:-%wex}}"/>
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} | %highlight(%-5level) | %boldRed(%thread) |
+%boldGreen(%logger) | %msg%n"/>
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+        <encoder>
+            <pattern>${STDOUT_LOG_PATTERN}</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+    </appender>
+    <!--此⽇志appender是为开发使⽤，只配置最底级别，控制台输出的⽇志级别是⼤于或等于此级别的
+   ⽇志信息-->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>debug</level>
+    </filter>
+    <encoder>
+        <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        <!-- 设置字符集 -->
+        <charset>UTF-8</charset>
+    </encoder>
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE-INFO">
+        <!--常规⽇志⽂件-->
+        <file>${LOG_PATH}/log-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--归档⽇志⽂件-->
+            <fileNamePattern>${LOG_PATH}/info/log-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>30MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>6</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+        <!-- 日志输出格式：%d表示日期时间，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %logger{50} 表示logger名字最长50个字符，否则按照句点分割。
+     %msg：日志消息，%n是换行符 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>utf-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger Line:%-3L - %m%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+        </filter>
+    </appender>
+    <!--警告⽇志⽂件-->
+    <appender name="FILE-WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--常规⽇志⽂件-->
+        <file>${LOG_PATH}/log-warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--归档⽇志⽂件-->
+            <fileNamePattern>${LOG_PATH}/warn/log-warn.%d{yyyy-MM}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>30MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>6</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>utf-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger Line:%-3L - %m%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!--错误⽇志⽂件-->
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--常规⽇志⽂件-->
+        <file>${LOG_PATH}/log-err.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--归档⽇志⽂件-->
+            <fileNamePattern>${LOG_PATH}/err/log-err.%d{yyyy-MM}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>30MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>6</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>utf-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!--请求⽇志⽂件-->
+    <appender name="HTTP-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/log-http.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/http/log-http.%d{yyyy-MM}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>30MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>6</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>utf-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger Line:%-3L - %m%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+        </filter>
+    </appender>
+    <!-- 异步输出，异步的log⽚段必须在同步段后⾯，否则不起作⽤ -->
+    <appender name="FILE-INFO-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失⽇志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的⽇志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加⼀个 -->
+        <appender-ref ref="FILE-INFO"/>
+    </appender>
+    <appender name="FILE-WARN-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失⽇志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的⽇志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加⼀个 -->
+        <appender-ref ref="FILE-WARN"/>
+    </appender>
+    <appender name="FILE-ERROR-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失⽇志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的⽇志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加⼀个 -->
+        <appender-ref ref="FILE-ERROR"/>
+    </appender>
+    <!--根⽇志-->
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-INFO-ASYNC"/>
+        <appender-ref ref="FILE-WARN-ASYNC"/>
+        <appender-ref ref="FILE-ERROR-ASYNC"/>
+    </root>
+</configuration>

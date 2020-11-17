@@ -1,0 +1,3 @@
+# Project exclude paths
+/sb-log-example/target/
+/sb-mybatis-example/target/

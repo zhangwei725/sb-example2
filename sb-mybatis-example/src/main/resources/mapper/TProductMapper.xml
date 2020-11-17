@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.mybatis.mapper.TProductMapper">
+  <resultMap id="BaseResultMap" type="com.smart.mybatis.entity.TProduct">
+    <!--@mbg.generated-->
+    <!--@Table t_product-->
+    <id column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
+    <result column="status" jdbcType="BOOLEAN" property="status" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    product_id, `name`, price, img, `status`, create_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from t_product
+    where product_id = #{productId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from t_product
+    where product_id = #{productId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="product_id" keyProperty="productId" parameterType="com.smart.mybatis.entity.TProduct" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_product (`name`, price, img, 
+      `status`, create_date)
+    values (#{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{img,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BOOLEAN}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="product_id" keyProperty="productId" parameterType="com.smart.mybatis.entity.TProduct" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="img != null">
+        img,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="img != null">
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BOOLEAN},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smart.mybatis.entity.TProduct">
+    <!--@mbg.generated-->
+    update t_product
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="img != null">
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=BOOLEAN},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smart.mybatis.entity.TProduct">
+    <!--@mbg.generated-->
+    update t_product
+    set `name` = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      img = #{img,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=BOOLEAN},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where product_id = #{productId,jdbcType=BIGINT}
+  </update>
+</mapper>

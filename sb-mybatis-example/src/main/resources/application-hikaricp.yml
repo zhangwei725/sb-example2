@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    # 指定Hikari连接池
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: ""
+      # 等待连接池的超时时间
+      connection-timeout: 30000
+      #      连接池的最小连接数
+      minimum-idle: 10
+      #      配置连接池最大连接数
+      maximum-pool-size: 20
+      #      设置连接池的名字
+      pool-name: MyHikaricp
+      # 自动提交
+      auto-commit: true
+      # 开启内存泄露检测
+      leak-detection-threshold: 5000
+      # 测试连接数据库的语句
+      connection-test-query: SELECT 1
+
+
+
+
+
+
+
+
+
+
+
+
